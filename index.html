@@ -1,301 +1,143 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zico Ai - Bio Link</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            /* MENGGUNAKAN GAMBAR DARI SCREENSHOT USER */
-            --img-pilar: url('https://r.jina.ai/i/05e03290940345098e94879f727c62d1'); 
-            --img-background: url('https://r.jina.ai/i/05e03290940345098e94879f727c62d1');
-            --primary-lime: #DFFF5E;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZICO AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin:0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(to bottom, #1e3c72, #2a5298);
+    color: white;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-height:100vh;
+    padding: 20px;
+  }
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            color: white;
-            min-height: 100vh;
-            /* Background utama dengan efek blur agar mirip gambar */
-            background: linear-gradient(rgba(18, 72, 116, 0.4), rgba(18, 72, 116, 0.4)), var(--img-background) center/cover fixed;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+  h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin: 20px 0 5px 0;
+  }
 
-        /* Bagian Gambar Pilar Atas */
-        .header-image {
-            width: 100%;
-            height: 250px;
-            background: var(--img-pilar) center/top no-repeat;
-            background-size: cover;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
-        }
+  h2 {
+    font-size: 18px;
+    font-weight: 400;
+    margin: 0 0 30px 0;
+    opacity: 0.85;
+  }
 
-        .profile-section {
-            text-align: center;
-            margin: 30px 0;
-        }
+  .button, .social-btn {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border:none;
+    border-radius:10px;
+    padding:12px 20px;
+    margin:10px 0;
+    cursor:pointer;
+    font-weight:600;
+    font-size:14px;
+    transition:0.2s;
+  }
 
-        .profile-section h1 { font-size: 28px; margin: 0; font-weight: 700; }
-        .profile-section p { font-size: 14px; margin: 5px 0; opacity: 0.9; }
+  .button {
+    background: #DFFF5E;
+    color:#1a1a1a;
+  }
+  .button:hover { background:#cbe746; }
 
-        /* Container Chat Putih */
-        .chat-container {
-            width: 90%;
-            max-width: 450px;
-            background: #ffffff;
-            border-radius: 15px;
-            height: 300px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
-        }
+  .social-btn { width:200px; gap:10px; }
+  .instagram { background:#C13584; }
+  .tiktok { background:#000; }
+  .social-btn:hover { opacity:0.8; }
 
-        #chat-messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            font-size: 14px;
-        }
+  /* Kontak Developer Modal */
+  .modal-bg {
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.6);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:10;
+  }
 
-        .input-group {
-            display: flex;
-            padding: 10px;
-            background: #f4f4f4;
-            border-top: 1px solid #eee;
-        }
+  .modal {
+    background:white; color:black; padding:20px; border-radius:12px;
+    max-width:400px; width:90%; display:flex; flex-direction:column;
+    gap:12px;
+  }
+  .modal input, .modal textarea {
+    padding:10px; border-radius:8px; border:1px solid #ccc; width:100%;
+    font-size:14px;
+  }
+  .modal button { background:#4e9af1; color:white; padding:10px; border:none; border-radius:8px; cursor:pointer; font-weight:600; }
+  .modal button:hover { opacity:0.85; }
 
-        #user-msg {
-            flex: 1;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 8px;
-            outline: none;
-        }
-
-        #send-btn {
-            background: #4e9af1;
-            color: white;
-            border: none;
-            padding: 0 15px;
-            margin-left: 5px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        /* Tombol Menu Lime */
-        .link-button {
-            width: 90%;
-            max-width: 450px;
-            background: var(--primary-lime);
-            color: #1a1a1a;
-            padding: 18px 20px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            text-decoration: none;
-            font-weight: 700;
-            box-sizing: border-box;
-            cursor: pointer;
-            border: none;
-            transition: 0.2s;
-        }
-
-        .link-button:hover { transform: scale(1.02); }
-
-        /* MODAL STYLE */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.7);
-            justify-content: center; align-items: center;
-        }
-
-        .modal-content {
-            background: #444; /* Warna abu gelap sesuai gambar */
-            width: 90%; max-width: 400px;
-            border-radius: 15px; padding: 20px;
-            text-align: center; color: white;
-        }
-
-        .modal-content h2 { margin-top: 0; font-size: 18px; }
-        .modal-content input, .modal-content textarea {
-            width: 100%; margin-bottom: 10px; padding: 12px;
-            border-radius: 8px; border: none; box-sizing: border-box;
-        }
-        .modal-content textarea { height: 80px; }
-        .modal-content p { font-size: 11px; opacity: 0.8; margin-bottom: 15px; }
-
-        .submit-btn {
-            background: var(--primary-lime);
-            width: 100%; padding: 15px; border: none;
-            border-radius: 10px; font-weight: 700; cursor: pointer;
-        }
-
-        /* Chat Bubbles */
-        .bubble { padding: 10px; border-radius: 10px; max-width: 80%; }
-        .user { align-self: flex-end; background: #007bff; color: white; }
-        .bot { align-self: flex-start; background: #e0e0e0; color: #333; }
-    </style>
+  footer {
+    margin-top:auto;
+    font-size:12px;
+    opacity:0.7;
+    margin-bottom:10px;
+  }
+</style>
 </head>
 <body>
 
-    <div class="header-image"></div>
+  <h1>ZICO AI</h1>
+  <h2>Make your life easier with, Zico Ai</h2>
 
-    <div class="profile-section">
-        <h1>Zico Ai</h1>
-        <p>Make life easier with, Zico Ai</p>
+  <!-- Tombol Kontak Developer -->
+  <button class="button" id="contactBtn">Kontak Developer</button>
+
+  <!-- Modal Kontak -->
+  <div class="modal-bg" id="modalBg">
+    <div class="modal">
+      <h3>Kontak Developer</h3>
+      <input type="text" id="devName" placeholder="Nama">
+      <input type="email" id="devEmail" placeholder="Email">
+      <textarea id="devReason" placeholder="Alasan menghubungi..." rows="3"></textarea>
+      <button id="sendMail">Kirim</button>
     </div>
+  </div>
 
-    <div class="chat-container">
-        <div id="chat-messages">
-            <div class="bubble bot">Halo! Ada yang bisa Zico bantu?</div>
-        </div>
-        <div class="input-group">
-            <input type="text" id="user-msg" placeholder="Tulis pesan...">
-            <button id="send-btn">Kirim</button>
-        </div>
-    </div>
+  <!-- Sosial Media -->
+  <button class="social-btn instagram" onclick="window.open('https://instagram.com/itzwil._','_blank')">Instagram</button>
+  <button class="social-btn tiktok" onclick="window.open('https://www.tiktok.com/@itzwil25','_blank')">TikTok</button>
 
-    <button class="link-button" onclick="openModal()">
-        <span>Kontak Developer</span>
-        <span>▼</span>
-    </button>
+  <footer>Powered by OpenAI</footer>
 
-    <a href="https://instagram.com/itzwil._" class="link-button" target="_blank">
-        <span>Follow itzwil._ on Instagram</span>
-        <span>▼</span>
-    </a>
+<script>
+  const contactBtn = document.getElementById('contactBtn');
+  const modalBg = document.getElementById('modalBg');
+  const sendMailBtn = document.getElementById('sendMail');
 
-    <div id="contactModal" class="modal">
-        <div class="modal-content">
-            <h2>Contact Developer</h2>
-            <input type="text" id="name" placeholder="Name">
-            <input type="email" id="email" placeholder="Email">
-            <input type="text" id="phone" placeholder="Phone">
-            <textarea id="message" placeholder="Message"></textarea>
-            <p>By submitting your contact details, you are providing your data to Zico Ai, who may contact you for marketing purposes.</p>
-            <button class="submit-btn" onclick="sendToEmail()">Submit</button>
-            <button onclick="closeModal()" style="background:none; border:none; color:white; margin-top:10px; cursor:pointer;">Close</button>
-        </div>
-    </div>
+  contactBtn.addEventListener('click', () => modalBg.style.display = 'flex');
 
-    <script>
-        // Modal Logic
-        function openModal() { document.getElementById('contactModal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('contactModal').style.display = 'none'; }
+  // Klik luar modal untuk tutup
+  modalBg.addEventListener('click', (e) => { if(e.target === modalBg) modalBg.style.display='none'; });
 
-        // Kirim Email Logic
-        function sendToEmail() {
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const message = document.getElementById('message').value;
+  // Kirim email via mailto
+  sendMailBtn.addEventListener('click', () => {
+    const name = document.getElementById('devName').value.trim();
+    const email = document.getElementById('devEmail').value.trim();
+    const reason = document.getElementById('devReason').value.trim();
 
-            const mailtoLink = `mailto:itzwildan5@gmail.com?subject=Contact from ${name}&body=Nama: ${name}%0D%0AEmail: ${email}%0D%0APhone: ${phone}%0D%0APesan: ${message}`;
-            
-            window.location.href = mailtoLink;
-        }
+    if(!name || !email || !reason) {
+      alert('Harap isi semua field!');
+      return;
+    }
 
-        // Chat Logic (Dummy)
-        const sendBtn = document.getElementById('send-btn');
-        const chatMessages = document.getElementById('chat-messages');
-        const userMsgInput = document.getElementById('user-msg');
+    const subject = encodeURIComponent(`Kontak dari ${name}`);
+    const body = encodeURIComponent(`Nama: ${name}\nEmail: ${email}\nAlasan: ${reason}`);
+    window.location.href = `mailto:itzwildan5@gmail.com?subject=${subject}&body=${body}`;
+    modalBg.style.display = 'none';
+  });
+</script>
 
-        sendBtn.addEventListener('click', () => {
-            const msg = userMsgInput.value;
-            if(!msg) return;
-
-            const userDiv = document.createElement('div');
-            userDiv.className = 'bubble user';
-            userDiv.textContent = msg;
-            chatMessages.appendChild(userDiv);
-            
-            userMsgInput.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            // Respon bot otomatis
-            setTimeout(() => {
-                const botDiv = document.createElement('div');
-                botDiv.className = 'bubble bot';
-                botDiv.textContent = "Zico sedang memproses permintaanmu...";
-                chatMessages.appendChild(botDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1000);
-        });
-    </script>
 </body>
 </html>
-2>
-            <input type="text" id="name" placeholder="Name">
-            <input type="email" id="email" placeholder="Email">
-            <input type="text" id="phone" placeholder="Phone">
-            <textarea id="message" placeholder="Message"></textarea>
-            <p>By submitting your contact details, you are providing your data to Zico Ai, who may contact you for marketing purposes.</p>
-            <button class="submit-btn" onclick="sendToEmail()">Submit</button>
-            <button onclick="closeModal()" style="background:none; border:none; color:white; margin-top:10px; cursor:pointer;">Close</button>
-        </div>
-    </div>
-
-    <script>
-        // Modal Logic
-        function openModal() { document.getElementById('contactModal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('contactModal').style.display = 'none'; }
-
-        // Kirim Email Logic
-        function sendToEmail() {
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const message = document.getElementById('message').value;
-
-            const mailtoLink = `mailto:itzwildan5@gmail.com?subject=Contact from ${name}&body=Nama: ${name}%0D%0AEmail: ${email}%0D%0APhone: ${phone}%0D%0APesan: ${message}`;
-            
-            window.location.href = mailtoLink;
-        }
-
-        // Chat Logic (Dummy)
-        const sendBtn = document.getElementById('send-btn');
-        const chatMessages = document.getElementById('chat-messages');
-        const userMsgInput = document.getElementById('user-msg');
-
-        sendBtn.addEventListener('click', () => {
-            const msg = userMsgInput.value;
-            if(!msg) return;
-
-            const userDiv = document.createElement('div');
-            userDiv.className = 'bubble user';
-            userDiv.textContent = msg;
-            chatMessages.appendChild(userDiv);
-            
-            userMsgInput.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            // Respon bot otomatis
-            setTimeout(() => {
-                const botDiv = document.createElement('div');
-                botDiv.className = 'bubble bot';
-                botDiv.textContent = "Zico sedang memproses permintaanmu...";
-                chatMessages.appendChild(botDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1000);
-        });
-    </script>
-</body>
-</html>
-
