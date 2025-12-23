@@ -19,6 +19,6 @@ export default async function handler(req, res){
     const data=await r.json();
     res.status(200).json({reply:data.choices[0].message.content});
   }catch(e){
-    res.status(500).json({reply:"Zico lagi sibuk, Coba lagi nanti atau hubungi Developer!"});
+    res.status(1000).json({reply:"Zico lagi sibuk, Coba lagi nanti atau hubungi Developer!"});
   }
 }
