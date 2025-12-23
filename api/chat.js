@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 
   try {
     const r = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" +
+      "https://generativelanguage.googleapis.com/v1beta/models/models/gemini-1.5-flash:generateContent?key=" +
         process.env.GEMINI_KEY,
       {
         method: "POST",
@@ -16,12 +16,10 @@ export default async function handler(req, res) {
           contents: [{
             parts: [{
               text: `
-Kamu adalah AI bernama ZICO.
-Gaya bicara santai, ramah, bahasa Indonesia gaul.
-Jawab singkat tapi jelas.
+text: `Kamu adalah AI bernama ZICO.
+Jawab singkat, santai, bahasa Indonesia gaul.
 
-Pesan user:
-${pesan}
+User: ${pesan}`
 `
             }]
           }]
