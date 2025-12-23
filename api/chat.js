@@ -6,37 +6,19 @@ export default async function handler(req, res) {
   const pesan = req.body.message;
 
   try {
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 15000); // max 15 detik
 
-const controller = new AbortController();
-setTimeout(() => controller.abort(), 15000); // max 15 detik
-
-const r = await fetch(
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" +
-    process.env.GEMINI_KEY,
-  {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    signal: controller.signal,
-    body: JSON.stringify({
-      contents: [{
-        parts: [{ text: `User: ${pesan}` }]
-      }]
-    })
-  }
-);
-       
+    const r = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" +
+        process.env.GEMINI_KEY,
+      {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
         body: JSON.stringify({
           contents: [{
-            parts: [{
-              text: `
-text: `Kamu adalah AI bernama ZICO.
-Jawab singkat, santai, bahasa Indonesia gaul.
-
-User: ${pesan}`
-`
-            }]
+            parts: [{ text: `User: ${pesan}` }]
           }]
         })
       }
@@ -45,11 +27,12 @@ User: ${pesan}`
     const data = await r.json();
 
     res.status(200).json({
-      reply: data.candidates[0].content.parts[0].text
+      reply: data.candidates?.[0]?.content?.parts?.[0]?.text || "ZICO lagi rame 😵 coba kirim lagi bentar ya"
     });
 
   } catch (e) {
-  res.status(200).json({
-    reply: "ZICO lagi rame 😵 coba kirim lagi bentar ya"
-  });
+    res.status(200).json({
+      reply: "ZICO lagi rame 😵 coba kirim lagi bentar ya"
+    });
+  }
 }
