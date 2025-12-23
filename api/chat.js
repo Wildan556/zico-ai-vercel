@@ -6,8 +6,9 @@ export default async function handler(req, res) {
   const pesan = req.body.message;
 
   try {
-    const controller = new AbortController();
-setTimeout(() => controller.abort(), 15000); // maksimal 15 detik
+
+const controller = new AbortController();
+setTimeout(() => controller.abort(), 15000); // max 15 detik
 
 const r = await fetch(
   "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" +
@@ -18,7 +19,7 @@ const r = await fetch(
     signal: controller.signal,
     body: JSON.stringify({
       contents: [{
-        parts: [{ text: pesan }]
+        parts: [{ text: `User: ${pesan}` }]
       }]
     })
   }
