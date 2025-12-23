@@ -13,8 +13,10 @@ export default async function handler(req, res){
         "Authorization":"Bearer " + process.env.OPENAI_KEY
       },
       body: JSON.stringify({
-        model: "text-davinci-003", // bisa ganti ke text-curie-001 untuk lebih cepat
-        prompt: `Kamu adalah AI bernama ZICO.\nBahasa Indonesia gaul, ramah, jawab singkat tapi jelas.\nPesan user: ${pesan}`,
+        model: "text-davinci-003", // bisa ganti text-curie-001 biar lebih cepat
+        prompt: `Kamu adalah AI bernama ZICO.
+Bahasa Indonesia gaul, ramah, jawab singkat tapi jelas.
+Pesan user: ${pesan}`,
         max_tokens: 150,
         temperature: 0.7
       })
@@ -24,6 +26,6 @@ export default async function handler(req, res){
     res.status(200).json({ reply: data.choices[0].text.trim() });
 
   } catch(e) {
-    res.status(1000).json({ reply:"AI eror, mohon coba lagi atau hubungi Developer!" });
+    res.status(500).json({ reply:"Sistem sibuk 😢" });
   }
 }
