@@ -1,161 +1,243 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZICO AI Chat</title>
-<style>
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(to bottom, #8fd3f4, #84fab0);
-    display: flex;
-    justify-content: center;
-    padding-top: 50px;
-  }
-  #chat-container {
-    width: 90%;
-    max-width: 500px;
-    background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  #messages {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background: #f9f9f9;
-  }
-  .message {
-    max-width: 80%;
-    padding: 10px 15px;
-    border-radius: 20px;
-    word-wrap: break-word;
-    font-size: 14px;
-    line-height: 1.4;
-    opacity: 0;
-    animation: fadeIn 0.3s forwards;
-  }
-  .user { 
-    align-self: flex-end;
-    background: #4e9af1;
-    color: white;
-    border-bottom-right-radius: 0;
-  }
-  .zico {
-    align-self: flex-start;
-    background: #22c55e;
-    color: white;
-    border-bottom-left-radius: 0;
-    position: relative;
-  }
-  .loading-dots {
-    display: inline-block;
-  }
-  .loading-dots span {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    margin: 0 2px;
-    background: white;
-    border-radius: 50%;
-    animation: blink 1s infinite;
-  }
-  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zico Ai - Bio Link</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* MENGGUNAKAN GAMBAR DARI SCREENSHOT USER */
+            --img-pilar: url('https://r.jina.ai/i/05e03290940345098e94879f727c62d1'); 
+            --img-background: url('https://r.jina.ai/i/05e03290940345098e94879f727c62d1');
+            --primary-lime: #DFFF5E;
+        }
 
-  #input-container {
-    display: flex;
-    padding: 10px;
-    background: #eee;
-    gap: 5px;
-  }
-  #msg {
-    flex: 1;
-    padding: 10px;
-    border-radius: 20px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-  }
-  #send {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 20px;
-    background: #4e9af1;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  #send:disabled { background: #999; cursor: not-allowed; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            min-height: 100vh;
+            /* Background utama dengan efek blur agar mirip gambar */
+            background: linear-gradient(rgba(18, 72, 116, 0.4), rgba(18, 72, 116, 0.4)), var(--img-background) center/cover fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-  @keyframes blink {
-    0%, 80%, 100% { opacity: 0; }
-    40% { opacity: 1; }
-  }
+        /* Bagian Gambar Pilar Atas */
+        .header-image {
+            width: 100%;
+            height: 250px;
+            background: var(--img-pilar) center/top no-repeat;
+            background-size: cover;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
 
-  @keyframes fadeIn {
-    to { opacity: 1; }
-  }
-</style>
+        .profile-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .profile-section h1 { font-size: 28px; margin: 0; font-weight: 700; }
+        .profile-section p { font-size: 14px; margin: 5px 0; opacity: 0.9; }
+
+        /* Container Chat Putih */
+        .chat-container {
+            width: 90%;
+            max-width: 450px;
+            background: #ffffff;
+            border-radius: 15px;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        #chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .input-group {
+            display: flex;
+            padding: 10px;
+            background: #f4f4f4;
+            border-top: 1px solid #eee;
+        }
+
+        #user-msg {
+            flex: 1;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        #send-btn {
+            background: #4e9af1;
+            color: white;
+            border: none;
+            padding: 0 15px;
+            margin-left: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Tombol Menu Lime */
+        .link-button {
+            width: 90%;
+            max-width: 450px;
+            background: var(--primary-lime);
+            color: #1a1a1a;
+            padding: 18px 20px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-decoration: none;
+            font-weight: 700;
+            box-sizing: border-box;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+        }
+
+        .link-button:hover { transform: scale(1.02); }
+
+        /* MODAL STYLE */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            justify-content: center; align-items: center;
+        }
+
+        .modal-content {
+            background: #444; /* Warna abu gelap sesuai gambar */
+            width: 90%; max-width: 400px;
+            border-radius: 15px; padding: 20px;
+            text-align: center; color: white;
+        }
+
+        .modal-content h2 { margin-top: 0; font-size: 18px; }
+        .modal-content input, .modal-content textarea {
+            width: 100%; margin-bottom: 10px; padding: 12px;
+            border-radius: 8px; border: none; box-sizing: border-box;
+        }
+        .modal-content textarea { height: 80px; }
+        .modal-content p { font-size: 11px; opacity: 0.8; margin-bottom: 15px; }
+
+        .submit-btn {
+            background: var(--primary-lime);
+            width: 100%; padding: 15px; border: none;
+            border-radius: 10px; font-weight: 700; cursor: pointer;
+        }
+
+        /* Chat Bubbles */
+        .bubble { padding: 10px; border-radius: 10px; max-width: 80%; }
+        .user { align-self: flex-end; background: #007bff; color: white; }
+        .bot { align-self: flex-start; background: #e0e0e0; color: #333; }
+    </style>
 </head>
 <body>
-<div id="chat-container">
-  <div id="messages"></div>
-  <div id="input-container">
-    <input type="text" id="msg" placeholder="Ketik pesan..." />
-    <button id="send">Kirim</button>
-  </div>
-</div>
 
-<script>
-const backendURL = "https://zico-ai-vercel.vercel.app/api/chat"; // Ganti sesuai URL backendmu
-const messages = document.getElementById('messages');
-const msgInput = document.getElementById('msg');
-const sendBtn = document.getElementById('send');
+    <div class="header-image"></div>
 
-function addMessage(text, sender, loading=false) {
-  const div = document.createElement('div');
-  div.className = `message ${sender}`;
-  if(loading) {
-    div.innerHTML = '<span class="loading-dots"><span></span><span></span><span></span></span>';
-  } else {
-    div.textContent = text;
-  }
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
-  return div;
-}
+    <div class="profile-section">
+        <h1>Zico Ai</h1>
+        <p>Make life easier with, Zico Ai</p>
+    </div>
 
-async function sendMessage() {
-  const msg = msgInput.value.trim();
-  if (!msg) return;
-  addMessage(msg, 'user');
-  msgInput.value = '';
-  sendBtn.disabled = true;
-  const zicoMsg = addMessage('', 'zico', true);
-  
-  try {
-    const res = await fetch(backendURL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: msg })
-    });
-    const data = await res.json();
-    zicoMsg.innerHTML = data.reply;
-  } catch (e) {
-    zicoMsg.innerHTML = "ZICO lagi rame 😵 coba kirim lagi bentar ya";
-  }
+    <div class="chat-container">
+        <div id="chat-messages">
+            <div class="bubble bot">Halo! Ada yang bisa Zico bantu?</div>
+        </div>
+        <div class="input-group">
+            <input type="text" id="user-msg" placeholder="Tulis pesan...">
+            <button id="send-btn">Kirim</button>
+        </div>
+    </div>
 
-  sendBtn.disabled = false;
-}
+    <button class="link-button" onclick="openModal()">
+        <span>Kontak Developer</span>
+        <span>▼</span>
+    </button>
 
-sendBtn.addEventListener('click', sendMessage);
-msgInput.addEventListener('keydown', e => { if(e.key === 'Enter') sendMessage(); });
-</script>
+    <a href="https://instagram.com/itzwil._" class="link-button" target="_blank">
+        <span>Follow itzwil._ on Instagram</span>
+        <span>▼</span>
+    </a>
+
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <h2>Contact Developer</h2>
+            <input type="text" id="name" placeholder="Name">
+            <input type="email" id="email" placeholder="Email">
+            <input type="text" id="phone" placeholder="Phone">
+            <textarea id="message" placeholder="Message"></textarea>
+            <p>By submitting your contact details, you are providing your data to Zico Ai, who may contact you for marketing purposes.</p>
+            <button class="submit-btn" onclick="sendToEmail()">Submit</button>
+            <button onclick="closeModal()" style="background:none; border:none; color:white; margin-top:10px; cursor:pointer;">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Modal Logic
+        function openModal() { document.getElementById('contactModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('contactModal').style.display = 'none'; }
+
+        // Kirim Email Logic
+        function sendToEmail() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const message = document.getElementById('message').value;
+
+            const mailtoLink = `mailto:itzwildan5@gmail.com?subject=Contact from ${name}&body=Nama: ${name}%0D%0AEmail: ${email}%0D%0APhone: ${phone}%0D%0APesan: ${message}`;
+            
+            window.location.href = mailtoLink;
+        }
+
+        // Chat Logic (Dummy)
+        const sendBtn = document.getElementById('send-btn');
+        const chatMessages = document.getElementById('chat-messages');
+        const userMsgInput = document.getElementById('user-msg');
+
+        sendBtn.addEventListener('click', () => {
+            const msg = userMsgInput.value;
+            if(!msg) return;
+
+            const userDiv = document.createElement('div');
+            userDiv.className = 'bubble user';
+            userDiv.textContent = msg;
+            chatMessages.appendChild(userDiv);
+            
+            userMsgInput.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Respon bot otomatis
+            setTimeout(() => {
+                const botDiv = document.createElement('div');
+                botDiv.className = 'bubble bot';
+                botDiv.textContent = "Zico sedang memproses permintaanmu...";
+                chatMessages.appendChild(botDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
