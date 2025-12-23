@@ -23,8 +23,7 @@ const r = await fetch(
     })
   }
 );
-        process.env.GEMINI_KEY,
-      {
+       
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
