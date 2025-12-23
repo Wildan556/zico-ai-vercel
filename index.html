@@ -6,158 +6,221 @@
 <title>ZICO AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-* { box-sizing:border-box; margin:0; padding:0; }
-body {
-  font-family:'Poppins',sans-serif;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  background:url('https://i.pinimg.com/originals/66/lT/Mq/66lTMqSiO.jpg') center/cover no-repeat;
-  backdrop-filter: blur(3px);
-  color:#fff;
-  padding:20px;
-}
-.top-image {
-  width:100%; max-width:500px; height:200px;
-  background:url('https://i.pinimg.com/originals/6K/q0/Zc/6Kq0ZcTW5.jpg') center/cover no-repeat;
-  border-radius:12px; margin-bottom:20px; box-shadow:0 8px 20px rgba(0,0,0,0.3);
-}
-h1 { font-size:48px; font-weight:700; text-align:center; margin-bottom:5px; }
-h2 { font-size:18px; font-weight:400; text-align:center; margin-bottom:20px; opacity:0.9; }
-.chat-box {
-  width:100%; max-width:500px;
-  background:rgba(255,255,255,0.9); color:#000;
-  border-radius:12px; display:flex; flex-direction:column; overflow:hidden;
-  margin-bottom:20px; box-shadow:0 8px 25px rgba(0,0,0,0.2);
-}
-#messages {
-  flex:1; padding:15px; overflow-y:auto;
-  display:flex; flex-direction:column; gap:10px; font-size:14px;
-}
-.msg-bubble { max-width:80%; padding:10px 14px; border-radius:15px; line-height:1.4; }
-.user { align-self:flex-end; background:#4fc3f7; color:#fff; border-bottom-right-radius:2px; }
-.zico { align-self:flex-start; background:#e0e0e0; color:#000; border-bottom-left-radius:2px; }
-.loading span { display:inline-block; width:4px; height:4px; background:#888; border-radius:50%; margin:0 1px; animation:bounce 1s infinite; }
-@keyframes bounce {0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
-.chat-input { display:flex; border-top:1px solid #ccc; }
-#msg { flex:1; border:none; padding:12px; outline:none; font-size:14px; }
-#send { background:#4fc3f7; color:white; border:none; padding:0 20px; cursor:pointer; font-weight:600; }
-#send:hover{opacity:0.85;}
-.full-btn {
-  width:100%; max-width:500px; padding:15px; margin:5px 0;
-  border:none; border-radius:10px; background:#4fc3f7; color:#fff;
-  font-weight:600; cursor:pointer; font-size:16px; transition:0.2s;
-}
-.full-btn:hover{opacity:0.85;}
-.modal-bg { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:none; justify-content:center; align-items:center; z-index:10; }
-.modal { background:#fff; color:#000; padding:20px; border-radius:12px; max-width:400px; width:90%; display:flex; flex-direction:column; gap:12px; }
-.modal input, .modal textarea { padding:10px; border-radius:8px; border:1px solid #ccc; width:100%; font-size:14px; }
-.modal button { background:#4fc3f7; color:white; padding:10px; border:none; border-radius:8px; cursor:pointer; font-weight:600; }
-.modal button:hover{ opacity:0.85; }
-footer { margin-top:20px; font-size:12px; opacity:0.7; }
+  /* RESET & BODY */
+  * { box-sizing: border-box; margin:0; padding:0; }
+  body {
+    font-family: 'Poppins', sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    background: url('https://i.pinimg.com/originals/66/lT/Mq/66lTMqSiO.jpg') center/cover no-repeat;
+    backdrop-filter: blur(3px);
+    color:#000;
+    padding:20px;
+  }
+
+
+  h1 { font-size: 48px; font-weight:700; text-align:center; margin-bottom:5px; }
+  h2 { font-size:18px; font-weight:400; text-align:center; margin-bottom:20px; opacity:0.9; }
+
+  /* CHAT BOX */
+  .chat-box {
+    width:100%;
+    max-width:500px;
+    background:rgba(255,255,255,0.9);
+    color:#fff;
+    border-radius:12px;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    margin-bottom:20px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.2);
+  }
+
+  #messages {
+    flex:1;
+    padding:15px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    font-size:14px;
+  }
+
+  .msg-bubble {
+    max-width:80%;
+    padding:10px 14px;
+    border-radius:15px;
+    line-height:1.4;
+  }
+  .user { align-self:flex-end; background:#4fc3f7; color:#fff; border-bottom-right-radius:2px; }
+  .zico { align-self:flex-start; background:#e0e0e0; color:#000; border-bottom-left-radius:2px; }
+
+  .loading span {
+    display:inline-block; width:4px; height:4px;
+    background:#888; border-radius:50%; margin:0 1px;
+    animation:bounce 1s infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);} }
+
+  .chat-input {
+    display:flex;
+    border-top:1px solid #ccc;
+  }
+  #msg {
+    flex:1;
+    border:none;
+    padding:12px;
+    outline:none;
+    font-size:14px;
+  }
+  #send {
+    background:#4fc3f7;
+    color:white;
+    border:none;
+    padding:0 20px;
+    cursor:pointer;
+    font-weight:600;
+  }
+
+  /* BUTTONS SOSMED & CONTACT */
+  .full-btn {
+    width:100%;
+    max-width:500px;
+    padding:15px;
+    margin:5px 0;
+    border:none;
+    border-radius:10px;
+    background:#4fc3f7;
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+    font-size:16px;
+    transition:0.2s;
+  }
+  .full-btn:hover { opacity:0.85; }
+
+  /* MODAL CONTACT */
+  .modal-bg {
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.6);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:10;
+  }
+  .modal {
+    background:#fff; color:#000;
+    padding:20px; border-radius:12px;
+    max-width:400px; width:90%; display:flex; flex-direction:column; gap:12px;
+  }
+  .modal input, .modal textarea {
+    padding:10px; border-radius:8px; border:1px solid #ccc; width:100%; font-size:14px;
+  }
+  .modal button { background:#4fc3f7; color:white; padding:10px; border:none; border-radius:8px; cursor:pointer; font-weight:600; }
+  .modal button:hover{ opacity:0.85; }
+
+  /* FOOTER */
+  footer { margin-top:20px; font-size:12px; opacity:0.7; }
 </style>
 </head>
 <body>
 
-<div class="top-image"></div>
+  <div class="top-image"></div>
 
-<h1>ZICO AI</h1>
-<h2>Make your life easier with, Zico Ai</h2>
+  <h1>ZICO AI</h1>
+  <h2>Make your life easier with, Zico Ai</h2>
 
-<!-- Chat Box -->
-<div class="chat-box">
-  <div id="messages">
-    <div class="msg-bubble zico">Hai! Apa yang bisa saya bantu hari ini?</div>
+  <!-- Chat -->
+  <div class="chat-box">
+    <div id="messages">
+      <div class="msg-bubble zico">Halo! ada yang perlu dibantu?</div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="msg" placeholder="Tulis pesan..." autocomplete="off">
+      <button id="send">Kirim</button>
+    </div>
   </div>
-  <div class="chat-input">
-    <input type="text" id="msg" placeholder="Tulis pesan..." autocomplete="off">
-    <button id="send">Kirim</button>
+
+  <!-- Kontak Developer -->
+  <button class="full-btn" id="contactBtn">Kontak Developer</button>
+
+  <div class="modal-bg" id="modalBg">
+    <div class="modal">
+      <h3>Kontak Developer</h3>
+      <input type="text" id="devName" placeholder="Nama">
+      <input type="email" id="devEmail" placeholder="Email">
+      <textarea id="devReason" placeholder="Alasan menghubungi..." rows="3"></textarea>
+      <button id="sendMail">Kirim</button>
+    </div>
   </div>
-</div>
 
-<!-- Kontak Developer -->
-<button class="full-btn" id="contactBtn">Kontak Developer</button>
+  <!-- Sosial Media -->
+  <button class="full-btn" onclick="window.open('https://instagram.com/itzwil._','_blank')">Instagram</button>
+  <button class="full-btn" onclick="window.open('https://www.tiktok.com/@itzwil25','_blank')">TikTok</button>
 
-<div class="modal-bg" id="modalBg">
-  <div class="modal">
-    <h3>Kontak Developer</h3>
-    <input type="text" id="devName" placeholder="Nama">
-    <input type="email" id="devEmail" placeholder="Email">
-    <textarea id="devReason" placeholder="Alasan menghubungi..." rows="3"></textarea>
-    <button id="sendMail">Kirim</button>
-  </div>
-</div>
-
-<!-- Sosial Media -->
-<button class="full-btn" onclick="window.open('https://instagram.com/itzwil._','_blank')">Instagram</button>
-<button class="full-btn" onclick="window.open('https://www.tiktok.com/@itzwil25','_blank')">TikTok</button>
-
-<footer>Powered by OpenAI</footer>
+  <footer>Powered by OpenAI</footer>
 
 <script>
-const backendURL = "https://nama-project-vercel.vercel.app/api/chat"; // ganti sesuai backend Vercel mu
-const messages = document.getElementById('messages');
-const msgInput = document.getElementById('msg');
-const sendBtn = document.getElementById('send');
+  // Modal kontak
+  const contactBtn = document.getElementById('contactBtn');
+  const modalBg = document.getElementById('modalBg');
+  const sendMailBtn = document.getElementById('sendMail');
 
-// Tambah pesan
-function addMessage(text,sender,isLoading=false){
-  const div = document.createElement('div');
-  div.className=`msg-bubble ${sender}`;
-  if(isLoading) div.innerHTML='<div class="loading"><span></span><span></span><span></span></div>';
-  else div.textContent=text;
-  messages.appendChild(div);
-  messages.scrollTop=messages.scrollHeight;
-  return div;
-}
+  contactBtn.addEventListener('click', ()=> modalBg.style.display='flex');
+  modalBg.addEventListener('click', e=>{ if(e.target===modalBg) modalBg.style.display='none'; });
 
-// Kirim pesan dengan timeout fallback 10 detik
-async function sendMessage(){
-  const text=msgInput.value.trim();
-  if(!text) return;
-  addMessage(text,'user'); msgInput.value='';
-  const zicoMsg=addMessage('','zico',true);
+  sendMailBtn.addEventListener('click', ()=>{
+    const name = document.getElementById('devName').value.trim();
+    const email = document.getElementById('devEmail').value.trim();
+    const reason = document.getElementById('devReason').value.trim();
 
-  let timeout=setTimeout(()=>{ zicoMsg.innerHTML="Sistem sibuk 😢"; },10000);
+    if(!name||!email||!reason){ alert('Harap isi semua field!'); return; }
 
-  try{
-    const res=await fetch(backendURL,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({message:text})
-    });
-    clearTimeout(timeout);
-    const data=await res.json();
-    zicoMsg.innerHTML=data.reply;
-  }catch(e){
-    clearTimeout(timeout);
-    zicoMsg.innerHTML="Maaf, sistem sedang sibuk. Coba lagi ya!";
+    const subject = encodeURIComponent(`Kontak dari ${name}`);
+    const body = encodeURIComponent(`Nama: ${name}\nEmail: ${email}\nAlasan: ${reason}`);
+    window.location.href = `mailto:itzwildan5@gmail.com?subject=${subject}&body=${body}`;
+    modalBg.style.display='none';
+  });
+
+  // Chat JS
+  const messages = document.getElementById('messages');
+  const msgInput = document.getElementById('msg');
+  const sendBtn = document.getElementById('send');
+
+  function addMessage(text,sender,isLoading=false){
+    const div = document.createElement('div');
+    div.className = `msg-bubble ${sender}`;
+    if(isLoading) div.innerHTML='<div class="loading"><span></span><span></span><span></span></div>';
+    else div.textContent=text;
+    messages.appendChild(div);
+    messages.scrollTop=messages.scrollHeight;
+    return div;
   }
-}
 
-sendBtn.addEventListener('click',sendMessage);
-msgInput.addEventListener('keypress',e=>{ if(e.key==='Enter') sendMessage(); });
+  async function sendMessage(){
+    const text=msgInput.value.trim(); if(!text) return;
+    addMessage(text,'user'); msgInput.value='';
+    const zicoMsg=addMessage('','zico',true);
 
-// Modal kontak
-const contactBtn=document.getElementById('contactBtn');
-const modalBg=document.getElementById('modalBg');
-const sendMailBtn=document.getElementById('sendMail');
+    try{
+      // Ganti backendURL sesuai backend AI lu
+      const backendURL="https://zico-ai-vercel.vercel.app/api/chat";
+      const res=await fetch(backendURL,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({message:text})
+      });
+      const data=await res.json();
+      zicoMsg.innerHTML=data.reply;
+    }catch(e){ zicoMsg.innerHTML="Maaf, sistem sedang sibuk. Coba lagi ya!"; }
+  }
 
-contactBtn.addEventListener('click',()=>modalBg.style.display='flex');
-modalBg.addEventListener('click',e=>{ if(e.target===modalBg) modalBg.style.display='none'; });
-
-sendMailBtn.addEventListener('click',()=>{
-  const name=document.getElementById('devName').value.trim();
-  const email=document.getElementById('devEmail').value.trim();
-  const reason=document.getElementById('devReason').value.trim();
-  if(!name||!email||!reason){ alert('Harap isi semua field!'); return; }
-  const subject=encodeURIComponent(`Kontak dari ${name}`);
-  const body=encodeURIComponent(`Nama: ${name}\nEmail: ${email}\nAlasan: ${reason}`);
-  window.location.href=`mailto:itzwildan5@gmail.com?subject=${subject}&body=${body}`;
-  modalBg.style.display='none';
-});
+  sendBtn.addEventListener('click',sendMessage);
+  msgInput.addEventListener('keypress',e=>{if(e.key==='Enter') sendMessage();});
 </script>
 
 </body>
 </html>
+
