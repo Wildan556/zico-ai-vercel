@@ -1,233 +1,59 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zico Ai - Bio & Chat</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-lime: #DFFF5E; /* Warna hijau stabilo sesuai gambar */
-            --dark-text: #1a1a1a;
-        }
+:root {
+    --primary-lime: #DFFF5E;
+    --dark-text: #1a1a1a;
+}
 
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            color: white;
-            min-height: 100vh;
-            /* Latar belakang biru laut dalam dengan overlay */
-            background: linear-gradient(rgba(18, 72, 116, 0.7), rgba(18, 72, 116, 0.7)), 
-                        url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80') center/cover;
-            background-attachment: fixed;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0 20px 40px 20px;
-        }
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px 40px 20px;
+}
 
-        /* Bagian Atas Gambar (Arsitektur pilar) */
-        .top-image {
-            width: 100%;
-            height: 220px;
-            background: url('https://images.unsplash.com/photo-1518005020480-10f3d1a7dfb5?auto=format&fit=crop&w=800&q=80') center/cover;
-            border-radius: 0 0 10px 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
+.top-image {
+    width: 100%;
+    height: 220px;
+    border-radius: 0 0 10px 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    background-size: cover;
+    background-position: center;
+}
 
-        .profile-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+.profile-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
 
-        .profile-header h1 {
-            font-size: 26px;
-            font-weight: 700;
-            margin: 0 0 8px 0;
-        }
+.profile-header h1 { font-size: 26px; margin:0; }
+.profile-header p { font-size: 15px; margin:0; opacity:0.9; }
 
-        .profile-header p {
-            font-size: 15px;
-            font-weight: 400;
-            margin: 0;
-            opacity: 0.9;
-        }
+.white-card {
+    width: 100%;
+    max-width: 450px;
+    background: #ffffff;
+    border-radius: 12px;
+    height: 320px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
 
-        /* Kotak Putih Utama (Tempat Chat) */
-        .white-card {
-            width: 100%;
-            max-width: 450px;
-            background: #ffffff;
-            border-radius: 12px;
-            height: 320px; /* Ukuran sesuai proporsi gambar */
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
+#messages { flex: 1; padding: 15px; overflow-y: auto; color:#333; display:flex; flex-direction:column; gap:8px; font-size:14px; }
 
-        #messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            font-size: 14px;
-        }
+.chat-input-area { display:flex; border-top:1px solid #eee; background:#fff; padding:5px; }
+#msg { flex:1; border:none; padding:12px 15px; outline:none; font-size:14px; }
+#send { background:#4e9af1; color:white; border:none; padding:0 20px; border-radius:8px; cursor:pointer; font-weight:600; }
 
-        /* Input chat di bawah kotak putih */
-        .chat-input-area {
-            display: flex;
-            border-top: 1px solid #eee;
-            background: #fff;
-            padding: 5px;
-        }
+.msg-bubble { max-width:85%; padding:10px 14px; border-radius:15px; line-height:1.4; }
+.user { align-self:flex-end; background:#007bff; color:white; border-bottom-right-radius:2px; }
+.zico { align-self:flex-start; background:#f0f0f0; color:#1a1a1a; border-bottom-left-radius:2px; }
 
-        #msg {
-            flex: 1;
-            border: none;
-            padding: 12px 15px;
-            outline: none;
-            font-size: 14px;
-        }
-
-        #send {
-            background: #4e9af1;
-            color: white;
-            border: none;
-            padding: 0 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        /* Tombol Link Menu */
-        .menu-button {
-            width: 100%;
-            max-width: 450px;
-            background: var(--primary-lime);
-            color: var(--dark-text);
-            padding: 18px 20px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 15px;
-            transition: transform 0.2s, background 0.2s;
-            box-sizing: border-box;
-        }
-
-        .menu-button:hover {
-            transform: translateY(-2px);
-            background: #d4f242;
-        }
-
-        .arrow-icon {
-            font-size: 12px;
-            transform: scaleY(0.8);
-        }
-
-        /* Bubbles Chat Styles */
-        .msg-bubble {
-            max-width: 85%;
-            padding: 10px 14px;
-            border-radius: 15px;
-            line-height: 1.4;
-        }
-        .user { align-self: flex-end; background: #007bff; color: white; border-bottom-right-radius: 2px; }
-        .zico { align-self: flex-start; background: #f0f0f0; color: #1a1a1a; border-bottom-left-radius: 2px; }
-
-        .loading span {
-            display: inline-block;
-            width: 4px; height: 4px;
-            background: #888; border-radius: 50%;
-            margin: 0 1px; animation: bounce 1s infinite;
-        }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-    </style>
-</head>
-<body>
-
-    <div class="top-image"></div>
-
-    <div class="profile-header">
-        <h1>Zico Ai</h1>
-        <p>Make life easier with, Zico Ai</p>
-    </div>
-
-    <div class="white-card">
-        <div id="messages">
-            <div class="msg-bubble zico">Hai! Apa yang bisa saya bantu hari ini?</div>
-        </div>
-        <div class="chat-input-area">
-            <input type="text" id="msg" placeholder="Tulis pesan..." autocomplete="off">
-            <button id="send">Kirim</button>
-        </div>
-    </div>
-
-    <a href="#" class="menu-button">
-        <span>Kontak Developer</span>
-        <span class="arrow-icon">▼</span>
-    </a>
-
-    <a href="https://instagram.com/itzwil._" target="_blank" class="menu-button">
-        <span>Follow itzwil._ on Instagram</span>
-        <span class="arrow-icon">▼</span>
-    </a>
-
-    <script>
-        const backendURL = "https://zico-ai-vercel.vercel.app/api/chat";
-        const messages = document.getElementById('messages');
-        const msgInput = document.getElementById('msg');
-        const sendBtn = document.getElementById('send');
-
-        function addMessage(text, sender, isLoading = false) {
-            const div = document.createElement('div');
-            div.className = `msg-bubble ${sender}`;
-            if (isLoading) {
-                div.innerHTML = '<div class="loading"><span></span><span></span><span></span></div>';
-            } else {
-                div.textContent = text;
-            }
-            messages.appendChild(div);
-            messages.scrollTop = messages.scrollHeight;
-            return div;
-        }
-
-        async function sendMessage() {
-            const text = msgInput.value.trim();
-            if (!text) return;
-
-            addMessage(text, 'user');
-            msgInput.value = '';
-            
-            const zicoMsg = addMessage('', 'zico', true);
-
-            try {
-                const response = await fetch(backendURL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: text })
-                });
-                const data = await response.json();
-                zicoMsg.innerHTML = data.reply;
-            } catch (error) {
-                zicoMsg.innerHTML = "Maaf, sistem sedang sibuk. Coba lagi ya!";
-            }
-        }
-
-        sendBtn.addEventListener('click', sendMessage);
-        msgInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
-    </script>
-</body>
-</html>
-
+.loading span { display:inline-block; width:4px; height:4px; background:#888; border-radius:50%; margin:0 1px; animation:bounce 1s infinite; }
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
