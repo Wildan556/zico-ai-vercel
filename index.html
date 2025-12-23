@@ -1,161 +1,268 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZICO AI Chat</title>
-<style>
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(to bottom, #8fd3f4, #84fab0);
-    display: flex;
-    justify-content: center;
-    padding-top: 50px;
-  }
-  #chat-container {
-    width: 90%;
-    max-width: 500px;
-    background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  #messages {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background: #f9f9f9;
-  }
-  .message {
-    max-width: 80%;
-    padding: 10px 15px;
-    border-radius: 20px;
-    word-wrap: break-word;
-    font-size: 14px;
-    line-height: 1.4;
-    opacity: 0;
-    animation: fadeIn 0.3s forwards;
-  }
-  .user { 
-    align-self: flex-end;
-    background: #4e9af1;
-    color: white;
-    border-bottom-right-radius: 0;
-  }
-  .zico {
-    align-self: flex-start;
-    background: #22c55e;
-    color: white;
-    border-bottom-left-radius: 0;
-    position: relative;
-  }
-  .loading-dots {
-    display: inline-block;
-  }
-  .loading-dots span {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    margin: 0 2px;
-    background: white;
-    border-radius: 50%;
-    animation: blink 1s infinite;
-  }
-  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zico Ai - Link & Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-lime: #DFFF5E;
+            --dark-text: #1a1a1a;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+        }
 
-  #input-container {
-    display: flex;
-    padding: 10px;
-    background: #eee;
-    gap: 5px;
-  }
-  #msg {
-    flex: 1;
-    padding: 10px;
-    border-radius: 20px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-  }
-  #send {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 20px;
-    background: #4e9af1;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  #send:disabled { background: #999; cursor: not-allowed; }
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            min-height: 100vh;
+            /* Latar belakang gradasi menyerupai gambar */
+            background: linear-gradient(to bottom, #2c6791, #4e9af1);
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
 
-  @keyframes blink {
-    0%, 80%, 100% { opacity: 0; }
-    40% { opacity: 1; }
-  }
+        /* Dekorasi Atas (Pilar/Latar) */
+        .header-bg {
+            width: 100%;
+            height: 200px;
+            background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80') center/cover;
+            border-radius: 0 0 20px 20px;
+            position: absolute;
+            top: 0;
+            z-index: -1;
+            opacity: 0.6;
+        }
 
-  @keyframes fadeIn {
-    to { opacity: 1; }
-  }
-</style>
+        .profile-section {
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 30px;
+        }
+
+        .profile-section h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .profile-section p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 15px;
+            font-size: 20px;
+        }
+
+        /* Banner Utama */
+        .hero-banner {
+            width: 100%;
+            max-width: 450px;
+            background: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=500&q=80') center/cover;
+            height: 180px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .hero-banner h2 {
+            font-size: 42px;
+            font-weight: 800;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Chat Container (Menggantikan tombol list) */
+        #chat-container {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 15px;
+        }
+
+        #messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            color: #333;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            line-height: 1.4;
+            animation: fadeIn 0.3s forwards;
+        }
+
+        .user { align-self: flex-end; background: #007AFF; color: white; border-bottom-right-radius: 2px; }
+        .zico { align-self: flex-start; background: #E9E9EB; color: #1a1a1a; border-bottom-left-radius: 2px; }
+
+        /* Input Area */
+        .input-group {
+            display: flex;
+            padding: 10px;
+            background: #fff;
+            border-top: 1px solid #eee;
+        }
+
+        #msg {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        #send {
+            background: var(--primary-lime);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--dark-text);
+        }
+
+        /* Tombol Link (Gaya Lime) */
+        .link-button {
+            width: 100%;
+            max-width: 450px;
+            background: var(--primary-lime);
+            color: var(--dark-text);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            transition: transform 0.2s;
+        }
+
+        .link-button:hover { transform: scale(1.02); }
+
+        .loading-dots span {
+            display: inline-block;
+            width: 5px; height: 5px;
+            background: #999; border-radius: 50%;
+            margin: 0 2px; animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
 <body>
-<div id="chat-container">
-  <div id="messages"></div>
-  <div id="input-container">
-    <input type="text" id="msg" placeholder="Ketik pesan..." />
-    <button id="send">Kirim</button>
-  </div>
+
+<div class="header-bg"></div>
+
+<div class="profile-section">
+    <h1>Zico Ai</h1>
+    <p>Make life easier with, Zico Ai</p>
+    <div class="social-icons">
+        <span>📸</span> <span>🎵</span>
+        <span>✉️</span>
+    </div>
 </div>
 
+<div class="hero-banner">
+    <h2>Let's go</h2>
+</div>
+
+<div id="chat-container">
+    <div id="messages">
+        <div class="message zico">Halo! Ada yang bisa Zico bantu hari ini?</div>
+    </div>
+    <div class="input-group">
+        <input type="text" id="msg" placeholder="Tanya sesuatu ke Zico..." />
+        <button id="send">Kirim</button>
+    </div>
+</div>
+
+<a href="#" class="link-button">
+    <span>About Zico Ai</span>
+    <span>▼</span>
+</a>
+
+<a href="https://instagram.com/your-profile" class="link-button">
+    <div style="text-align: left;">
+        <div style="font-weight: 700;">Follow me on Instagram</div>
+        <div style="font-size: 12px; opacity: 0.7;">Update info terbaru di sini</div>
+    </div>
+    <span>▼</span>
+</a>
+
 <script>
-const backendURL = "https://zico-ai-vercel.vercel.app/api/chat"; // Ganti sesuai URL backendmu
-const messages = document.getElementById('messages');
-const msgInput = document.getElementById('msg');
-const sendBtn = document.getElementById('send');
+    const backendURL = "https://zico-ai-vercel.vercel.app/api/chat";
+    const messages = document.getElementById('messages');
+    const msgInput = document.getElementById('msg');
+    const sendBtn = document.getElementById('send');
 
-function addMessage(text, sender, loading=false) {
-  const div = document.createElement('div');
-  div.className = `message ${sender}`;
-  if(loading) {
-    div.innerHTML = '<span class="loading-dots"><span></span><span></span><span></span></span>';
-  } else {
-    div.textContent = text;
-  }
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
-  return div;
-}
+    function addMessage(text, sender, loading=false) {
+        const div = document.createElement('div');
+        div.className = `message ${sender}`;
+        if(loading) {
+            div.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+        } else {
+            div.textContent = text;
+        }
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+        return div;
+    }
 
-async function sendMessage() {
-  const msg = msgInput.value.trim();
-  if (!msg) return;
-  addMessage(msg, 'user');
-  msgInput.value = '';
-  sendBtn.disabled = true;
-  const zicoMsg = addMessage('', 'zico', true);
-  
-  try {
-    const res = await fetch(backendURL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: msg })
-    });
-    const data = await res.json();
-    zicoMsg.innerHTML = data.reply;
-  } catch (e) {
-    zicoMsg.innerHTML = "ZICO lagi rame 😵 coba kirim lagi bentar ya";
-  }
+    async function sendMessage() {
+        const msg = msgInput.value.trim();
+        if (!msg) return;
 
-  sendBtn.disabled = false;
-}
+        addMessage(msg, 'user');
+        msgInput.value = '';
+        sendBtn.disabled = true;
 
-sendBtn.addEventListener('click', sendMessage);
-msgInput.addEventListener('keydown', e => { if(e.key === 'Enter') sendMessage(); });
+        const zicoMsg = addMessage('', 'zico', true);
+        
+        try {
+            const res = await fetch(backendURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: msg })
+            });
+            const data = await res.json();
+            zicoMsg.innerHTML = data.reply;
+        } catch (e) {
+            zicoMsg.innerHTML = "ZICO lagi rame 😵 coba kirim lagi bentar ya";
+        }
+
+        sendBtn.disabled = false;
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    msgInput.addEventListener('keydown', e => { if(e.key === 'Enter') sendMessage(); });
 </script>
+
 </body>
 </html>
