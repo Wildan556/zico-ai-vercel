@@ -6,8 +6,23 @@ export default async function handler(req, res) {
   const pesan = req.body.message;
 
   try {
-    const r = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/models/gemini-1.5-flash:generateContent?key=" +
+    const controller = new AbortController();
+setTimeout(() => controller.abort(), 15000); // maksimal 15 detik
+
+const r = await fetch(
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" +
+    process.env.GEMINI_KEY,
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    signal: controller.signal,
+    body: JSON.stringify({
+      contents: [{
+        parts: [{ text: pesan }]
+      }]
+    })
+  }
+);
         process.env.GEMINI_KEY,
       {
         method: "POST",
@@ -34,6 +49,7 @@ User: ${pesan}`
     });
 
   } catch (e) {
-    res.status(500).json({ reply: "AI error 😢" });
-  }
+  res.status(200).json({
+    reply: "ZICO lagi rame 😵 coba kirim lagi bentar ya"
+  });
 }
