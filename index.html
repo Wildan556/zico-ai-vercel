@@ -1,59 +1,51 @@
-:root {
-    --primary-lime: #DFFF5E;
-    --dark-text: #1a1a1a;
+const backendURL = "https://zico-ai-vercel.vercel.app/api/chat";
+const messages = document.getElementById('messages');
+const msgInput = document.getElementById('msg');
+const sendBtn = document.getElementById('send');
+const topImageDiv = document.querySelector('.top-image');
+const body = document.body;
+
+// Load config.json untuk gambar
+fetch('config.json')
+  .then(res => res.json())
+  .then(cfg => {
+      body.style.background = `linear-gradient(rgba(18,72,116,0.7), rgba(18,72,116,0.7)), url('${cfg.background}') center/cover fixed`;
+      topImageDiv.style.backgroundImage = `url('${cfg.topImage}')`;
+  });
+
+// Fungsi tambah chat
+function addMessage(text, sender, isLoading=false) {
+    const div = document.createElement('div');
+    div.className = `msg-bubble ${sender}`;
+    if(isLoading) div.innerHTML = '<div class="loading"><span></span><span></span><span></span></div>';
+    else div.textContent = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+    return div;
 }
 
-body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    color: white;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0 20px 40px 20px;
+// Fungsi kirim chat
+async function sendMessage() {
+    const text = msgInput.value.trim();
+    if(!text) return;
+
+    addMessage(text,'user');
+    msgInput.value='';
+
+    const zicoMsg = addMessage('', 'zico', true);
+
+    try {
+        const response = await fetch(backendURL,{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({message:text})
+        });
+        const data = await response.json();
+        zicoMsg.innerHTML = data.reply;
+    } catch(e) {
+        zicoMsg.innerHTML = "Maaf, sistem sedang sibuk. Coba lagi ya!";
+    }
 }
 
-.top-image {
-    width: 100%;
-    height: 220px;
-    border-radius: 0 0 10px 10px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    background-size: cover;
-    background-position: center;
-}
-
-.profile-header {
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.profile-header h1 { font-size: 26px; margin:0; }
-.profile-header p { font-size: 15px; margin:0; opacity:0.9; }
-
-.white-card {
-    width: 100%;
-    max-width: 450px;
-    background: #ffffff;
-    border-radius: 12px;
-    height: 320px;
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-}
-
-#messages { flex: 1; padding: 15px; overflow-y: auto; color:#333; display:flex; flex-direction:column; gap:8px; font-size:14px; }
-
-.chat-input-area { display:flex; border-top:1px solid #eee; background:#fff; padding:5px; }
-#msg { flex:1; border:none; padding:12px 15px; outline:none; font-size:14px; }
-#send { background:#4e9af1; color:white; border:none; padding:0 20px; border-radius:8px; cursor:pointer; font-weight:600; }
-
-.msg-bubble { max-width:85%; padding:10px 14px; border-radius:15px; line-height:1.4; }
-.user { align-self:flex-end; background:#007bff; color:white; border-bottom-right-radius:2px; }
-.zico { align-self:flex-start; background:#f0f0f0; color:#1a1a1a; border-bottom-left-radius:2px; }
-
-.loading span { display:inline-block; width:4px; height:4px; background:#888; border-radius:50%; margin:0 1px; animation:bounce 1s infinite; }
-@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+sendBtn.addEventListener('click', sendMessage);
+msgInput.addEventListener('keypress', e => { if(e.key==='Enter') sendMessage(); });
