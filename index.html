@@ -3,241 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zico Ai - Bio Link</title>
+    <title>Zico Ai - Custom UI & Contact</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* =========================================
+           CUSTOMIZER: GANTI URL GAMBAR DI SINI
+           ========================================= */
         :root {
-            /* MENGGUNAKAN GAMBAR DARI SCREENSHOT USER */
-            --img-pilar: url('https://r.jina.ai/i/05e03290940345098e94879f727c62d1'); 
-            --img-background: url('https://r.jina.ai/i/05e03290940345098e94879f727c62d1');
+            --url-gambar-pilar: "https://pin.it/66lTMqSiO";
+            --url-gambar-latar: "https://pin.it/6Kq0ZcTW5";
             --primary-lime: #DFFF5E;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            color: white;
-            min-height: 100vh;
-            /* Background utama dengan efek blur agar mirip gambar */
-            background: linear-gradient(rgba(18, 72, 116, 0.4), rgba(18, 72, 116, 0.4)), var(--img-background) center/cover fixed;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            margin: 0; font-family: 'Inter', sans-serif; color: white; min-height: 100vh;
+            background: linear-gradient(rgba(18, 72, 116, 0.5), rgba(18, 72, 116, 0.7)), 
+                        url(var(--url-gambar-latar)) center/cover fixed;
+            display: flex; flex-direction: column; align-items: center; padding-bottom: 50px;
         }
 
-        /* Bagian Gambar Pilar Atas */
-        .header-image {
-            width: 100%;
-            height: 250px;
-            background: var(--img-pilar) center/top no-repeat;
-            background-size: cover;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
+        .header-banner {
+            width: 100%; height: 230px;
+            background: url(var(--url-gambar-pilar)) center/cover no-repeat;
+            border-radius: 0 0 20px 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
-        .profile-section {
-            text-align: center;
-            margin: 30px 0;
+        .profile-info { text-align: center; margin: 25px 0; }
+        .profile-info h1 { margin: 0; font-size: 28px; }
+        .profile-info p { margin: 5px 0; opacity: 0.8; font-size: 14px; }
+
+        .white-card {
+            width: 90%; max-width: 450px; background: white; border-radius: 15px;
+            height: 320px; display: flex; flex-direction: column; overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); margin-bottom: 15px;
         }
 
-        .profile-section h1 { font-size: 28px; margin: 0; font-weight: 700; }
-        .profile-section p { font-size: 14px; margin: 5px 0; opacity: 0.9; }
+        #chat-content { flex: 1; padding: 15px; overflow-y: auto; color: #333; display: flex; flex-direction: column; gap: 8px; }
+        .input-box { display: flex; padding: 10px; background: #f8f8f8; border-top: 1px solid #eee; }
+        #text-input { flex: 1; border: 1px solid #ddd; padding: 10px; border-radius: 10px; outline: none; }
+        #btn-send { background: #4e9af1; color: white; border: none; padding: 0 15px; margin-left: 5px; border-radius: 10px; cursor: pointer; }
 
-        /* Container Chat Putih */
-        .chat-container {
-            width: 90%;
-            max-width: 450px;
-            background: #ffffff;
-            border-radius: 15px;
-            height: 300px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
+        .btn-lime {
+            width: 90%; max-width: 450px; background: var(--primary-lime); color: #1a1a1a;
+            padding: 18px; border-radius: 15px; margin-bottom: 12px; font-weight: 700;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer; border: none; transition: 0.3s; text-decoration: none;
         }
 
-        #chat-messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            font-size: 14px;
-        }
-
-        .input-group {
-            display: flex;
-            padding: 10px;
-            background: #f4f4f4;
-            border-top: 1px solid #eee;
-        }
-
-        #user-msg {
-            flex: 1;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 8px;
-            outline: none;
-        }
-
-        #send-btn {
-            background: #4e9af1;
-            color: white;
-            border: none;
-            padding: 0 15px;
-            margin-left: 5px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        /* Tombol Menu Lime */
-        .link-button {
-            width: 90%;
-            max-width: 450px;
-            background: var(--primary-lime);
-            color: #1a1a1a;
-            padding: 18px 20px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            text-decoration: none;
-            font-weight: 700;
-            box-sizing: border-box;
-            cursor: pointer;
-            border: none;
-            transition: 0.2s;
-        }
-
-        .link-button:hover { transform: scale(1.02); }
-
-        /* MODAL STYLE */
         .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.7);
-            justify-content: center; align-items: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 100;
         }
 
-        .modal-content {
-            background: #444; /* Warna abu gelap sesuai gambar */
-            width: 90%; max-width: 400px;
-            border-radius: 15px; padding: 20px;
-            text-align: center; color: white;
+        .modal-box {
+            background: #4a4a4a; width: 85%; max-width: 380px; border-radius: 20px;
+            padding: 25px; color: white; text-align: center;
         }
 
-        .modal-content h2 { margin-top: 0; font-size: 18px; }
-        .modal-content input, .modal-content textarea {
-            width: 100%; margin-bottom: 10px; padding: 12px;
-            border-radius: 8px; border: none; box-sizing: border-box;
+        .modal-box input, .modal-box textarea {
+            width: 100%; margin-bottom: 10px; padding: 12px; border-radius: 8px; border: none; box-sizing: border-box;
         }
-        .modal-content textarea { height: 80px; }
-        .modal-content p { font-size: 11px; opacity: 0.8; margin-bottom: 15px; }
 
         .submit-btn {
-            background: var(--primary-lime);
-            width: 100%; padding: 15px; border: none;
-            border-radius: 10px; font-weight: 700; cursor: pointer;
+            background: var(--primary-lime); width: 100%; padding: 15px; border-radius: 10px;
+            border: none; font-weight: 700; cursor: pointer; font-size: 16px;
         }
 
-        /* Chat Bubbles */
-        .bubble { padding: 10px; border-radius: 10px; max-width: 80%; }
-        .user { align-self: flex-end; background: #007bff; color: white; }
-        .bot { align-self: flex-start; background: #e0e0e0; color: #333; }
+        .bubble { padding: 10px 14px; border-radius: 15px; font-size: 14px; max-width: 80%; }
+        .u-msg { align-self: flex-end; background: #007bff; color: white; }
+        .z-msg { align-self: flex-start; background: #eee; color: #333; }
+        .error-msg { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
     </style>
 </head>
 <body>
 
-    <div class="header-image"></div>
+    <div class="header-banner"></div>
 
-    <div class="profile-section">
+    <div class="profile-info">
         <h1>Zico Ai</h1>
         <p>Make life easier with, Zico Ai</p>
     </div>
 
-    <div class="chat-container">
-        <div id="chat-messages">
-            <div class="bubble bot">Halo! Ada yang bisa Zico bantu?</div>
+    <div class="white-card">
+        <div id="chat-content">
+            <div class="bubble z-msg">Halo! Mau tanya apa hari ini?</div>
         </div>
-        <div class="input-group">
-            <input type="text" id="user-msg" placeholder="Tulis pesan...">
-            <button id="send-btn">Kirim</button>
+        <div class="input-box">
+            <input type="text" id="text-input" placeholder="Tulis pesan...">
+            <button id="btn-send">Kirim</button>
         </div>
     </div>
 
-    <button class="link-button" onclick="openModal()">
+    <button class="btn-lime" onclick="toggleModal(true)">
         <span>Kontak Developer</span>
         <span>▼</span>
     </button>
 
-    <a href="https://instagram.com/itzwil._" class="link-button" target="_blank">
+    <a href="https://instagram.com/itzwil._" class="btn-lime" target="_blank">
         <span>Follow itzwil._ on Instagram</span>
         <span>▼</span>
     </a>
 
-    <div id="contactModal" class="modal">
-        <div class="modal-content">
-            <h2>Contact Developer</h2>
+    <div class="modal" id="contactModal">
+        <div class="modal-box">
+            <h3 style="margin-top:0">Contact Developer</h3>
             <input type="text" id="name" placeholder="Name">
             <input type="email" id="email" placeholder="Email">
             <input type="text" id="phone" placeholder="Phone">
-            <textarea id="message" placeholder="Message"></textarea>
-            <p>By submitting your contact details, you are providing your data to Zico Ai, who may contact you for marketing purposes.</p>
-            <button class="submit-btn" onclick="sendToEmail()">Submit</button>
-            <button onclick="closeModal()" style="background:none; border:none; color:white; margin-top:10px; cursor:pointer;">Close</button>
+            <textarea id="msg-input" placeholder="Message" style="height:80px"></textarea>
+            <p style="font-size:10px; opacity:0.7; margin-bottom:15px">By submitting your contact details, you are providing your data to Zico Ai.</p>
+            <button class="submit-btn" onclick="handleEmail()">Submit</button>
+            <button onclick="toggleModal(false)" style="background:none; border:none; color:white; margin-top:10px; cursor:pointer">Close</button>
         </div>
     </div>
 
     <script>
-        // Modal Logic
-        function openModal() { document.getElementById('contactModal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('contactModal').style.display = 'none'; }
+        const backendURL = "https://zico-ai-vercel.vercel.app/api/chat";
+        const chatBox = document.getElementById('chat-content');
+        const input = document.getElementById('text-input');
+        const sendBtn = document.getElementById('btn-send');
 
-        // Kirim Email Logic
-        function sendToEmail() {
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const message = document.getElementById('message').value;
-
-            const mailtoLink = `mailto:itzwildan5@gmail.com?subject=Contact from ${name}&body=Nama: ${name}%0D%0AEmail: ${email}%0D%0APhone: ${phone}%0D%0APesan: ${message}`;
-            
-            window.location.href = mailtoLink;
+        function toggleModal(show) {
+            document.getElementById('contactModal').style.display = show ? 'flex' : 'none';
         }
 
-        // Chat Logic (Dummy)
-        const sendBtn = document.getElementById('send-btn');
-        const chatMessages = document.getElementById('chat-messages');
-        const userMsgInput = document.getElementById('user-msg');
+        function handleEmail() {
+            const name = document.getElementById('name').value;
+            const msg = document.getElementById('msg-input').value;
+            if(!name || !msg) return alert("Harap isi nama dan pesan!");
+            window.location.href = `mailto:itzwildan5@gmail.com?subject=Inquiry from ${name}&body=${encodeURIComponent(msg)}`;
+            toggleModal(false);
+        }
 
-        sendBtn.addEventListener('click', () => {
-            const msg = userMsgInput.value;
-            if(!msg) return;
+        function addBubble(text, type) {
+            const div = document.createElement('div');
+            div.className = `bubble ${type}`;
+            div.textContent = text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return div;
+        }
 
-            const userDiv = document.createElement('div');
-            userDiv.className = 'bubble user';
-            userDiv.textContent = msg;
-            chatMessages.appendChild(userDiv);
+        async function handleChat() {
+            const text = input.value.trim();
+            if(!text) return;
+
+            addBubble(text, 'u-msg');
+            input.value = '';
             
-            userMsgInput.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            const botBubble = addBubble("Sedang berpikir...", 'z-msg');
+            
+            // LOGIKA TIMEOUT 20 DETIK
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => {
+                controller.abort(); // Batalkan fetch jika lebih dari 20 detik
+            }, 20000);
 
-            // Respon bot otomatis
-            setTimeout(() => {
-                const botDiv = document.createElement('div');
-                botDiv.className = 'bubble bot';
-                botDiv.textContent = "Zico sedang memproses permintaanmu...";
-                chatMessages.appendChild(botDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1000);
-        });
-    </script>
-</body>
-</html>
+            try {
+                const response = await fetch(backendURL, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message: text}),
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                const data = await response.json();
+                botBubble.textContent = data.reply;
+            } catch (error) {
+                clearTimeout(timeoutId);
+                if (error.name === 'AbortError') {
+                    botBubble.textContent = "Maaf permintaan mu gagal di proses, coba lagi nanti";
+                    botBubble.classList.add('error-msg');
+                } else {
