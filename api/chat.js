@@ -45,15 +45,7 @@ router.post('/chat', async (req, res) => {
       userId: userId || 'anonymous'
     });
 
-  } catch (error) {
-    console.error('Error di /api/chat:', error);
-    // Handle error spesifik OpenAI
-    if (error.response) {
-      res.status(error.response.status).json({ error: error.response.data.error.message });
-    } else {
-      res.status(500).json({ error: 'Terjadi kesalahan server. Coba lagi nanti.' });
-    }
-  }
+
 });
 
 module.exports = router;
