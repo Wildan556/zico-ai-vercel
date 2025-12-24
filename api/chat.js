@@ -1,38 +1,70 @@
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+const messages = document.getElementById("messages");
+const msgInput = document.getElementById("msg");
+const sendBtn = document.getElementById("send");
+
+function addMessage(text, sender, loading = false) {
+  const div = document.createElement("div");
+  div.className = `msg-bubble ${sender}`;
+
+  if (loading) {
+    div.innerHTML = `
+      <div class="loading">
+        <span></span><span></span><span></span>
+      </div>
+    `;
+  } else {
+    div.textContent = text;
   }
 
-  if (!process.env.OPENAI_KEY) {
-    return res.status(500).json({ error: "OPENAI_KEY belum diset" });
-  }
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+  return div;
+}
 
-  const { message } = req.body;
+async function sendMessage() {
+  const text = msgInput.value.trim();
+  if (!text) return;
+
+  // pesan user
+  addMessage(text, "user");
+  msgInput.value = "";
+
+  // loading AI
+  const aiBubble = addMessage("", "zico", true);
 
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const res = await fetch("/api/chat", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_KEY}`
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: message }]
-      })
+      body: JSON.stringify({ message: text })
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return res.status(500).json({ error: data.error });
+    // kalau backend error
+    if (!res.ok) {
+      aiBubble.textContent = "AI lagi sibuk 😅 coba lagi ya";
+      return;
     }
 
-    res.status(200).json({
-      reply: data.choices[0].message.content
-    });
+    const data = await res.json();
+
+    // proteksi biar ga undefined / object
+    if (data && typeof data.reply === "string") {
+      aiBubble.textContent = data.reply;
+    } else {
+      aiBubble.textContent = "AI tidak memberi jawaban.";
+    }
 
   } catch (err) {
-    res.status(500).json({ error: "Koneksi ke OpenAI gagal" });
+    aiBubble.textContent = "Koneksi bermasalah 😢";
   }
 }
+
+// tombol kirim
+sendBtn.addEventListener("click", sendMessage);
+
+// enter
+msgInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") sendMessage();
+});
