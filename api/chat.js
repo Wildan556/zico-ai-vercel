@@ -1,31 +1,59 @@
-export default async function handler(req, res){
-  if(req.method !== 'POST'){
-    return res.status(405).json({error:"Method not allowed"});
-  }
+const express = require('express');
+const cors = require('cors');
+const { Configuration, OpenAIApi } = require('openai'); // Import dari openai package
 
-  const pesan = req.body.message;
+const router = express.Router();
 
+// Konfigurasi OpenAI (gunakan API key dari env)
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY, // Pastikan env variable sudah di-set
+});
+const openai = new OpenAIApi(configuration);
+
+// Middleware
+router.use(express.json());
+router.use(cors());
+
+// Endpoint POST untuk chat
+router.post('/chat', async (req, res) => {
   try {
-    const r = await fetch("https://api.openai.com/v1/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type":"application/json",
-        "Authorization":"Bearer " + process.env.OPENAI_KEY
-      },
-      body: JSON.stringify({
-        model: "text-davinci-003", // bisa ganti text-curie-001 biar lebih cepat
-        prompt: `Kamu adalah AI bernama ZICO.
-Bahasa Indonesia gaul, ramah, jawab singkat tapi jelas.
-Pesan user: ${pesan}`,
-        max_tokens: 150,
-        temperature: 0.7
-      })
+    const { message, userId } = req.body;
+
+    // Validasi input
+    if (!message || message.trim() === '') {
+      return res.status(400).json({ error: 'Pesan tidak boleh kosong.' });
+    }
+
+    // Panggil OpenAI API
+    const completion = await openai.createChatCompletion({
+      model: 'gpt-3.5-turbo', // Ganti ke 'gpt-4' jika mau lebih canggih
+      messages: [
+        { role: 'system', content: 'Kamu adalah asisten AI yang membantu dan ramah.' }, // Prompt sistem (opsional, sesuaikan)
+        { role: 'user', content: message }
+      ],
+      max_tokens: 150, // Batas token respons (sesuaikan)
+      temperature: 0.7, // Kreativitas (0-1)
     });
 
-    const data = await r.json();
-    res.status(200).json({ reply: data.choices[0].text.trim() });
+    // Ambil respons dari OpenAI
+    const aiResponse = completion.data.choices[0].message.content.trim();
 
-  } catch(e) {
-    res.status(500).json({ reply:"Sistem sibuk 😢" });
+    // Kirim respons kembali
+    res.json({
+      response: aiResponse,
+      timestamp: new Date().toISOString(),
+      userId: userId || 'anonymous'
+    });
+
+  } catch (error) {
+    console.error('Error di /api/chat:', error);
+    // Handle error spesifik OpenAI
+    if (error.response) {
+      res.status(error.response.status).json({ error: error.response.data.error.message });
+    } else {
+      res.status(500).json({ error: 'Terjadi kesalahan server. Coba lagi nanti.' });
+    }
   }
-}
+});
+
+module.exports = router;
