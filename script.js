@@ -1,18 +1,41 @@
-fetch("/api/chat", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ message: input.value })
-})
-.then(res => res.json())
-.then(data => {
-  if (data.reply) {
-    output.innerText = data.reply;
-  } else if (data.error) {
-    output.innerText = data.error;
-  } else {
-    output.innerText = "AI gak ngirim jawaban 😅";
+const input = document.getElementById("msg");
+const button = document.getElementById("send");
+const output = document.getElementById("hasil");
+
+button.addEventListener("click", kirimPesan);
+
+async function kirimPesan() {
+  const pesan = input.value.trim();
+
+  if (!pesan) {
+    output.innerText = "Ketik pesan dulu 😅";
+    return;
   }
-})
-.catch(() => {
-  output.innerText = "Koneksi error, coba lagi";
-});
+
+  output.innerText = "AI lagi mikir...";
+
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: pesan
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.reply) {
+      output.innerText = data.reply;
+    } else if (data.error) {
+      output.innerText = data.error;
+    } else {
+      output.innerText = "AI gak ngirim jawaban 😵‍💫";
+    }
+
+  } catch (err) {
+    output.innerText = "Koneksi error, coba lagi bentar";
+  }
+}
