@@ -1,38 +1,42 @@
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+async function sendMessage() {
+  const input = document.getElementById("userInput");
+  const text = input.value.trim();
+  if (!text) return;
 
-  if (!process.env.OPENAI_KEY) {
-    return res.status(500).json({ error: "OPENAI_KEY belum diset" });
-  }
+  input.value = "";
 
-  const { message } = req.body;
+  // bubble user
+  addBubble(text, "user");
+
+  // bubble AI (loading)
+  const aiBubble = addBubble("AI lagi mikir...", "ai");
 
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+
+    const res = await fetch("/api/chat", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_KEY}`
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: message }]
-      })
+      body: JSON.stringify({ message: text }),
+      signal: controller.signal
     });
 
-    const data = await response.json();
+    clearTimeout(timeout);
 
-    if (!response.ok) {
-      return res.status(500).json({ error: data.error });
+    const data = await res.json();
+
+    if (data.reply) {
+      aiBubble.textContent = data.reply;
+    } else if (data.error) {
+      aiBubble.textContent = data.error;
+    } else {
+      aiBubble.textContent = "AI gak ngasih jawaban 😅";
     }
 
-    res.status(200).json({
-      reply: data.choices[0].message.content
-    });
-
   } catch (err) {
-    res.status(500).json({ error: "Koneksi ke OpenAI gagal" });
+    aiBubble.textContent = "AI terlalu lama mikir (timeout)";
   }
 }
