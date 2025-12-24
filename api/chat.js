@@ -1,51 +1,66 @@
-const express = require('express');
-const cors = require('cors');
-const { Configuration, OpenAIApi } = require('openai'); // Import dari openai package
+export default async function handler(req, res) {
+  // cuma terima POST
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 
-const router = express.Router();
+  const apiKey = process.env.OPENAI_KEY;
 
-// Konfigurasi OpenAI (gunakan API key dari env)
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY, // Pastikan env variable sudah di-set
-});
-const openai = new OpenAIApi(configuration);
+  if (!apiKey) {
+    return res.status(500).json({
+      error: "API key belum diset di Vercel"
+    });
+  }
 
-// Middleware
-router.use(express.json());
-router.use(cors());
+  const { message } = req.body;
 
-// Endpoint POST untuk chat
-router.post('/chat', async (req, res) => {
+  if (!message) {
+    return res.status(400).json({
+      error: "Pesan kosong"
+    });
+  }
+
   try {
-    const { message, userId } = req.body;
+    const response = await fetch(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [
+            {
+              role: "system",
+              content: "Kamu adalah AI yang ramah dan menjawab dengan bahasa santai."
+            },
+            {
+              role: "user",
+              content: message
+            }
+          ],
+          temperature: 0.7
+        })
+      }
+    );
 
-    // Validasi input
-    if (!message || message.trim() === '') {
-      return res.status(400).json({ error: 'Pesan tidak boleh kosong.' });
+    const data = await response.json();
+
+    if (!data.choices) {
+      return res.status(500).json({
+        error: "AI lagi sibuk, coba bentar lagi"
+      });
     }
 
-    // Panggil OpenAI API
-    const completion = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo', // Ganti ke 'gpt-4' jika mau lebih canggih
-      messages: [
-        { role: 'system', content: 'Kamu adalah asisten AI yang membantu dan ramah.' }, // Prompt sistem (opsional, sesuaikan)
-        { role: 'user', content: message }
-      ],
-      max_tokens: 150, // Batas token respons (sesuaikan)
-      temperature: 0.7, // Kreativitas (0-1)
+    return res.status(200).json({
+      reply: data.choices[0].message.content
     });
 
-    // Ambil respons dari OpenAI
-    const aiResponse = completion.data.choices[0].message.content.trim();
-
-    // Kirim respons kembali
-    res.json({
-      response: aiResponse,
-      timestamp: new Date().toISOString(),
-      userId: userId || 'anonymous'
+  } catch (err) {
+    return res.status(500).json({
+      error: "Server error, AI belum sempet jawab"
     });
-
-
-});
-
-module.exports = router;
+  }
+}
