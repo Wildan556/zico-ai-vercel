@@ -186,63 +186,49 @@
   });
 
 // Chat JS
-const messages = document.getElementById('messages');
-const msgInput = document.getElementById('msg');
-const sendBtn = document.getElementById('send');
+document.addEventListener('DOMContentLoaded', () => {
+  const messages = document.getElementById('messages');
+  const msgInput = document.getElementById('msg');
+  const sendBtn = document.getElementById('send');
 
-function addMessage(text, sender, isLoading = false) {
-  const div = document.createElement('div');
-  div.className = `msg-bubble ${sender}`;
-  div.textContent = text;
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
-  return div;
-}
-
-async function sendMessage() {
-  const text = msgInput.value.trim();
-  if (!text) return;
-
-  addMessage(text, 'user');
-  msgInput.value = '';
-
-  const zicoMsg = addMessage('ZICO lagi mikir...', 'zico');
-
-  try {
-    const res = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text })
-    });
-
-    const data = await res.json();
-
-    zicoMsg.textContent = data.reply || 'AI gak jawab 😅';
-
-  } catch (err) {
-    zicoMsg.textContent = 'Koneksi bermasalah ❌';
+  function addMessage(text, sender) {
+    const div = document.createElement('div');
+    div.className = `msg-bubble ${sender}`;
+    div.textContent = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+    return div;
   }
-}
 
-sendBtn.addEventListener('click', sendMessage);
-msgInput.addEventListener('keypress', e => {
-  if (e.key === 'Enter') sendMessage();
-});
+  async function sendMessage() {
+    const text = msgInput.value.trim();
+    if (!text) return;
 
-  // 🔥 PAKSA TAMPILKAN APA ADANYA
-  aiBubble.textContent = JSON.stringify(data);
+    addMessage(text, 'user');
+    msgInput.value = '';
 
-} catch (err) {
-  aiBubble.textContent = "ERROR FETCH";
-}
-}
+    const zicoMsg = addMessage('ZICO lagi mikir...', 'zico');
 
-sendBtn.addEventListener('click', sendMessage);
-msgInput.addEventListener('keypress', e => {
-  if (e.key === 'Enter') sendMessage();
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      });
+
+      const data = await res.json();
+      zicoMsg.textContent = data.reply || 'AI gak jawab 😅';
+
+    } catch (err) {
+      zicoMsg.textContent = 'Koneksi bermasalah ❌';
+    }
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  msgInput.addEventListener('keypress', e => {
+    if (e.key === 'Enter') sendMessage();
+  });
 });
 </script>
-
 </body>
 </html>
-
