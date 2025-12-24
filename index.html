@@ -220,15 +220,7 @@ async function sendMessage() {
       body: JSON.stringify({ message: text })
     });
 
-    const data = await res.json();
-
-    if (data.reply) {
-      zicoMsg.textContent = data.reply;
-    } else if (data.error) {
-      zicoMsg.textContent = data.error;
-    } else {
-      zicoMsg.textContent = 'AI tidak memberikan jawaban 😅';
-    }
+    zicoMsg.textContent = JSON.stringify(data, null, 2);
 
   } catch (e) {
     zicoMsg.textContent = 'Koneksi bermasalah, coba lagi ya';
