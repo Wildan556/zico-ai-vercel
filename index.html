@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addMessage(text, 'user');
     msgInput.value = '';
 
-    const zicoMsg = addMessage('ZICO lagi mikir...', 'zico');
+    const zicoMsg = addMessage('...', 'zico');
 
     try {
       const res = await fetch('/api/chat', {
@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
       zicoMsg.textContent = data.reply || 'AI gak jawab 😅';
 
     } catch (err) {
-      zicoMsg.textContent = 'Koneksi bermasalah ❌';
+      zicoMsg.textContent = 'Ai gagal merespon!';
     }
   }
 
