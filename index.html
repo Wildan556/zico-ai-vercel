@@ -214,17 +214,20 @@ async function sendMessage() {
   const zicoMsg = addMessage('', 'zico', true);
 
   try {
-    const res = await fetch('/api/chat', {   // 🔥 PENTING: relative path
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text })
-    });
+  const res = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: text })
+  });
 
-    zicoMsg.textContent = JSON.stringify(data, null, 2);
+  const data = await res.json();
 
-  } catch (e) {
-    zicoMsg.textContent = 'Koneksi bermasalah, coba lagi ya';
-  }
+  // 🔥 PAKSA TAMPILKAN APA ADANYA
+  aiBubble.textContent = JSON.stringify(data);
+
+} catch (err) {
+  aiBubble.textContent = "ERROR FETCH";
+}
 }
 
 sendBtn.addEventListener('click', sendMessage);
