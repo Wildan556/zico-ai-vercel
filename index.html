@@ -20,7 +20,6 @@
     padding:20px;
   }
 
-
   h1 { font-size: 48px; font-weight:700; text-align:center; margin-bottom:5px; }
   h2 { font-size:18px; font-weight:400; text-align:center; margin-bottom:20px; opacity:0.9; }
 
@@ -29,13 +28,13 @@
     width:100%;
     max-width:500px;
     background:rgba(255,255,255,0.9);
-    color:#fff;
     border-radius:12px;
     display:flex;
     flex-direction:column;
     overflow:hidden;
     margin-bottom:20px;
     box-shadow:0 8px 25px rgba(0,0,0,0.2);
+    height: 400px; /* Tambahan agar box memiliki tinggi tetap */
   }
 
   #messages {
@@ -53,20 +52,15 @@
     padding:10px 14px;
     border-radius:15px;
     line-height:1.4;
+    word-wrap: break-word;
   }
   .user { align-self:flex-end; background:#4fc3f7; color:#fff; border-bottom-right-radius:2px; }
   .zico { align-self:flex-start; background:#e0e0e0; color:#000; border-bottom-left-radius:2px; }
 
-  .loading span {
-    display:inline-block; width:4px; height:4px;
-    background:#888; border-radius:50%; margin:0 1px;
-    animation:bounce 1s infinite;
-  }
-  @keyframes bounce { 0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);} }
-
   .chat-input {
     display:flex;
     border-top:1px solid #ccc;
+    background: #fff;
   }
   #msg {
     flex:1;
@@ -127,12 +121,9 @@
 </head>
 <body>
 
-  <div class="top-image"></div>
-
   <h1>ZICO AI</h1>
   <h2>Make your life easier with, Zico Ai</h2>
 
-  <!-- Chat -->
   <div class="chat-box">
     <div id="messages">
       <div class="msg-bubble zico">Halo! ada yang perlu dibantu?</div>
@@ -143,7 +134,6 @@
     </div>
   </div>
 
-  <!-- Kontak Developer -->
   <button class="full-btn" id="contactBtn">Kontak Developer</button>
 
   <div class="modal-bg" id="modalBg">
@@ -156,7 +146,6 @@
     </div>
   </div>
 
-  <!-- Sosial Media -->
   <button class="full-btn" onclick="window.open('https://instagram.com/itzwil._','_blank')">Instagram</button>
   <button class="full-btn" onclick="window.open('https://www.tiktok.com/@itzwil25','_blank')">TikTok</button>
   <button class="full-btn" onclick="window.open('https://wa.me/6283829565226?text=Halo%20!','_blank')">WhatsApp ZicoBot</button>
@@ -164,7 +153,7 @@
   <footer>Powered by OpenAI</footer>
 
 <script>
-  // Modal kontak
+  // --- LOGIKA MODAL ---
   const contactBtn = document.getElementById('contactBtn');
   const modalBg = document.getElementById('modalBg');
   const sendMailBtn = document.getElementById('sendMail');
@@ -185,50 +174,60 @@
     modalBg.style.display='none';
   });
 
-// Chat JS
-document.addEventListener('DOMContentLoaded', () => {
-  const messages = document.getElementById('messages');
-  const msgInput = document.getElementById('msg');
-  const sendBtn = document.getElementById('send');
+  // --- LOGIKA CHAT AI ---
+  document.addEventListener('DOMContentLoaded', () => {
+    const messagesContainer = document.getElementById('messages');
+    const msgInput = document.getElementById('msg');
+    const sendBtn = document.getElementById('send');
 
-  function addMessage(text, sender) {
-    const div = document.createElement('div');
-    div.className = `msg-bubble ${sender}`;
-    div.textContent = text;
-    messages.appendChild(div);
-    messages.scrollTop = messages.scrollHeight;
-    return div;
-  }
-
-  async function sendMessage() {
-    const text = msgInput.value.trim();
-    if (!text) return;
-
-    addMessage(text, 'user');
-    msgInput.value = '';
-
-    const zicoMsg = addMessage('...', 'zico');
-
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
-      });
-
-      const data = await res.json();
-      zicoMsg.textContent = data.reply || 'AI gak jawab 😅';
-
-    } catch (err) {
-      zicoMsg.textContent = 'Ai gagal merespon!';
+    function addMessage(text, sender) {
+      const div = document.createElement('div');
+      div.className = `msg-bubble ${sender}`;
+      div.textContent = text;
+      messagesContainer.appendChild(div);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      return div;
     }
-  }
 
-  sendBtn.addEventListener('click', sendMessage);
-  msgInput.addEventListener('keypress', e => {
-    if (e.key === 'Enter') sendMessage();
+    async function sendMessage() {
+      const text = msgInput.value.trim();
+      if (!text) return;
+
+      // 1. Tampilkan pesan user
+      addMessage(text, 'user');
+      msgInput.value = '';
+
+      // 2. Tampilkan status loading
+      const zicoMsg = addMessage('Zico sedang berpikir...', 'zico');
+
+      try {
+        // 3. Panggil API Vercel kita
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+
+        const data = await res.json();
+
+        // 4. Update pesan dengan balasan asli
+        if (data.reply) {
+          zicoMsg.textContent = data.reply;
+        } else {
+          zicoMsg.textContent = 'Maaf, terjadi kesalahan pada API.';
+        }
+
+      } catch (err) {
+        zicoMsg.textContent = 'Gagal terhubung ke server!';
+        console.error(err);
+      }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    msgInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') sendMessage();
+    });
   });
-});
 </script>
 </body>
 </html>
